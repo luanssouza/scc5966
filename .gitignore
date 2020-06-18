@@ -43,3 +43,5 @@ pydevd*.log
 nodeLanguageServer/**
 nodeLanguageServer.*/**
 dataset
+.env/
+.vscode/
