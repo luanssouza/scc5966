@@ -36,10 +36,6 @@ def svdopt(train, k, lr = 0.05, reg = 0.02,miter = 10):
     return { "global_mean": global_mean, "bu": bu, "bi": bi, "P": P, "Q": Q, "error": error }
 
 def predict(model, u, i):
-    if u >= len(model["bu"]) or i >= len(model["bi"]):
-        return model["global_mean"]
-    if u >= len(model["P"]) or i >= len(model["Q"]):
-        return model["global_mean"]
     return model["global_mean"] + model["bu"][u] + model["bi"][i] + np.dot(model["P"][u], model["Q"][i])
 
 
@@ -55,7 +51,7 @@ def rmse(model, test):
     return math.sqrt(sum_err/len(test))
 
 def results(model, test):
-    return [predict(model, t[0], t[1]) for t in test]
+    return [predict(model, t[1], t[2]) for t in test]
 
 # Iniciando contagem
 start_time = time.time()

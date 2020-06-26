@@ -26,12 +26,6 @@ def baseline(train):
     return { "bu" : bu, "bi": bi, "mean": mean }
 
 def predict(model, u, i):
-    if u >= len(model["bu"]) or i >= len(model["bi"]):
-        return model["mean"]
-    if pd.isna(model["bu"][u]):
-        return model["mean"] + model["bi"][i]
-    if pd.isna(model["bi"][i]):
-        return model["mean"] + model["bu"][u]
     return model["mean"] + model["bu"][u] + model["bi"][i]
 
 def rmse(model, test):
@@ -46,7 +40,7 @@ def rmse(model, test):
     return math.sqrt(sum_err/len(test))
 
 def results(model, test):
-    return [predict(model, t[0], t[1]) for t in test]
+    return [predict(model, t[1], t[2]) for t in test]
 
 # Iniciando contagem
 start_time = time.time()
