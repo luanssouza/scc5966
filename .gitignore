@@ -45,3 +45,4 @@ nodeLanguageServer.*/**
 dataset
 .env/
 .vscode/
+results/
