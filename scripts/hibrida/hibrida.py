@@ -22,7 +22,9 @@ def baseline(train):
     aux = bi[~np.isnan(bi)]
     for u in users.columns.values:
         bu[u] = np.nanmean(users[u] - mean - aux)
-
+    
+    bi = np.nan_to_num(bi)
+    bu = np.nan_to_num(bu)
     model = { "bu" : bu, "bi": bi, "mean": mean }
     def predict(u, i):
         return model["mean"] + model["bu"][u] + model["bi"][i]
