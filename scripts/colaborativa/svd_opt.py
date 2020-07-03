@@ -4,10 +4,12 @@ import math
 
 import time
 
+start_alg = time.time()
+
 train = pd.read_csv('dataset/train_data.csv', header=None,  skiprows=[0], usecols=[0,1,2])
 test = pd.read_csv('dataset/test_data.csv')
 
-def svdopt(train, k, lr = 0.05, reg = 0.02,miter = 10):
+def svdopt(train, k = 5, lr = 0.05, reg = 0.02, miter = 10):
     global_mean = train[2].mean(skipna = True)
     nusers = train[0].max()+1
     nitems = train[1].max()+1
@@ -18,7 +20,7 @@ def svdopt(train, k, lr = 0.05, reg = 0.02,miter = 10):
     error = list()
     for l in range(0, miter):
         sq_error = 0
-        for j in range(0, len(train)):
+        for j in train.index:
             u = train[0][j]
             i = train[1][j]
             r_ui = train[2][j]
@@ -38,31 +40,22 @@ def svdopt(train, k, lr = 0.05, reg = 0.02,miter = 10):
 def predict(model, u, i):
     return model["global_mean"] + model["bu"][u] + model["bi"][i] + np.dot(model["P"][u], model["Q"][i])
 
-
-def rmse(model, test):
-    sum_err = 0
-    for t in test:
-        u = t[0]
-        i = t[1]
-        r_ui = t[2]
-        pred = predict(model, u, i)
-        error = (r_ui - pred)**2
-        sum_err += error
-    return math.sqrt(sum_err/len(test))
-
 def results(model, test):
     return [predict(model, t[1], t[2]) for t in test]
 
-# Iniciando contagem
+# Treinando
 start_time = time.time()
+svdopt = svdopt(train, 5)
+print("Tempo de treinamento em segundos: ", time.time() - start_time)
 
-svdopt = svdopt(train, 4)
-
+# Predizendo
+start_time = time.time()
 results = results(svdopt, test.values)
-
-# Finalizando contagem
-print("Tempo de execucao em segundos: ", time.time() - start_time)
+print("Tempo de predicao em segundos: ", time.time() - start_time)
 
 results = pd.DataFrame({ 'rating': results })
 results.insert(0, 'id', results.index)
 results.to_csv('results/svd_opt_results.csv', encoding='utf-8', index=False)
+
+
+print("Tempo de execucao em segundos: ", time.time() - start_alg)
