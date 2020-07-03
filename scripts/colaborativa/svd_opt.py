@@ -45,7 +45,7 @@ def results(model, test):
 
 # Treinando
 start_time = time.time()
-svdopt = svdopt(train, 5)
+svdopt = svdopt(train, k = 5, lr = 0.02, reg = 0.3, miter = 15)
 print("Tempo de treinamento em segundos: ", time.time() - start_time)
 
 # Predizendo
