@@ -4,6 +4,8 @@ import math
 
 import time
 
+start_alg = time.time()
+
 train = pd.read_csv('dataset/train_data.csv', header=None,  skiprows=[0], usecols=[0,1,2])
 test = pd.read_csv('dataset/test_data.csv')
 
@@ -37,33 +39,25 @@ def fbc_linear(train, test, features, lr = 0.05, reg = 0.002, miter = 10):
 def predict(model, user, item, features):
     return np.dot(model["profiles"][user-1, ], features[item-1, ])
 
-def rmse(model, test, features):
-    sum_err = 0
-    for t in test:
-        u = t[0]
-        i = t[1]
-        r_ui = t[2]
-        pred = predict(model, u, i, features)
-        error = (r_ui - pred)**2
-        sum_err += error
-    return math.sqrt(sum_err/len(test))
-
 def results(model, test, features):
     return [predict(model, t[1], t[2], features) for t in test]
-
-# Iniciando contagem
-start_time = time.time()
 
 features = genres.values
 features = np.hstack((features,np.ones((len(features),1))))
 
-fbc_linear = fbc_linear(train.values[:482205], train.values[482205:], features)
+# Treinando
+start_time = time.time()
+fbc_linear = fbc_linear(train.values[:482205], train.values[482205:], features, 0.05, 0.30, 10)
+print("Tempo de treinamento em segundos: ", time.time() - start_time)
 
+# Predizendo
+start_time = time.time()
 results = results(fbc_linear, test.values, features)
-
-# Finalizando contagem
-print("Tempo de execucao em segundos: ", time.time() - start_time)
+print("Tempo de predicao em segundos: ", time.time() - start_time)
 
 results = pd.DataFrame({ 'rating': results })
 results.insert(0, 'id', results.index)
 results.to_csv('results/linear_fbc_results.csv', encoding='utf-8', index=False)
+
+
+print("Tempo de execucao em segundos: ", time.time() - start_alg)
