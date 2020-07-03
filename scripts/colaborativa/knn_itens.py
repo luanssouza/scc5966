@@ -4,6 +4,8 @@ import math
 
 import time
 
+start_alg = time.time()
+
 train = pd.read_csv('dataset/train_data.csv')
 test = pd.read_csv('dataset/test_data.csv')
 
@@ -46,17 +48,19 @@ def rmse(test):
 def results(model, test):
     return [predict(model, t[1], t[2]) for t in test]
 
-# Iniciando contagem
+# Treinando
 start_time = time.time()
-
 knn = knn(train)
+print("Tempo de treinamento em segundos: ", time.time() - start_time)
 
+# Predizendo
+start_time = time.time()
 results = results(knn, test.values)
-
-# Finalizando contagem
-print("Tempo de execucao em segundos: ", time.time() - start_time)
+print("Tempo de predicao em segundos: ", time.time() - start_time)
 
 results = pd.DataFrame({ 'rating': results })
 results.insert(0, 'id', results.index)
 results.to_csv('results/knn_itens_results.csv', encoding='utf-8', index=False)
 
+
+print("Tempo de execucao em segundos: ", time.time() - start_alg)
