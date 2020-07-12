@@ -45,8 +45,8 @@ def rmse(test):
         sum_err += error
     return math.sqrt(sum_err/len(test))
 
-def results(model, test):
-    return [predict(model, t[1], t[2]) for t in test]
+def results(model, test, k):
+    return [predict(model, t[1], t[2], k) for t in test]
 
 # Treinando
 start_time = time.time()
@@ -55,7 +55,7 @@ print("Tempo de treinamento em segundos: ", time.time() - start_time)
 
 # Predizendo
 start_time = time.time()
-results = results(knn, test.values)
+results = results(knn, test.values, 9)
 print("Tempo de predicao em segundos: ", time.time() - start_time)
 
 results = pd.DataFrame({ 'rating': results })

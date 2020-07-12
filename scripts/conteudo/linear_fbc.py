@@ -47,7 +47,7 @@ features = np.hstack((features,np.ones((len(features),1))))
 
 # Treinando
 start_time = time.time()
-fbc_linear = fbc_linear(train.values[:482205], train.values[482205:], features, 0.05, 0.40, 10)
+fbc_linear = fbc_linear(train.values[:482205], train.values[482205:], features)
 print("Tempo de treinamento em segundos: ", time.time() - start_time)
 
 # Predizendo
