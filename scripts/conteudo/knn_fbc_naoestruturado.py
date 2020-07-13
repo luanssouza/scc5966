@@ -56,8 +56,8 @@ def predict(model, user, item, k = 5):
 
     return sumWeight/sumSim
 
-def results(model, test):
-    return [predict(model, t[1], t[2]) for t in test]
+def results(model, test, k):
+    return [predict(model, t[1], t[2], k) for t in test]
 
 # Treinando
 start_time = time.time()
@@ -68,7 +68,7 @@ print("Tempo de treinamento em segundos: ", time.time() - start_time)
 
 # Predizendo
 start_time = time.time()
-results = results(fbc_knn, test.values)
+results = results(fbc_knn, test.values, 15)
 print("Tempo de predicao em segundos: ", time.time() - start_time)
 
 results = pd.DataFrame({ 'rating': results })
