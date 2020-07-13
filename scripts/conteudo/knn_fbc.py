@@ -58,8 +58,8 @@ def rmse(model, test):
         sum_err += error
     return math.sqrt(sum_err/len(test))
 
-def results(model, test):
-    return [predict(model, t[1], t[2]) for t in test]
+def results(model, test, k):
+    return [predict(model, t[1], t[2], k) for t in test]
 
 features = genres.values
 features = np.hstack((features,np.ones((len(features),1))))
@@ -71,7 +71,7 @@ print("Tempo de treinamento em segundos: ", time.time() - start_time)
 
 # Predizendo
 start_time = time.time()
-results = results(fbc_knn, test.values)
+results = results(fbc_knn, test.values, 5)
 print("Tempo de predicao em segundos: ", time.time() - start_time)
 
 results = pd.DataFrame({ 'rating': results })
